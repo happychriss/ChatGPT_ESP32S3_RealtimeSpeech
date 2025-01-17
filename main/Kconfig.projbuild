@@ -1,0 +1,35 @@
+menu "ChatGPT Configuration"
+
+config WIFI_SSID
+    string "WiFi SSID"
+	default "myssid"
+	help
+		SSID (network name) for the example to connect to.
+
+config WIFI_PASSWORD
+    string "WiFi Password"
+	default "myssid"
+	help
+		WiFi password (WPA or WPA2) for the example to use.
+
+		Can be left blank if the network has no security set.
+
+config SERVER_URI
+    string "Server URL to send data"
+    default "http://192.168.0.248:8000/upload"
+    help
+        Server URL to send data
+
+config OPENAI_API_KEY
+    string "OpenAI API Key"
+    default "keep secret"
+    help
+        Server URL to send data
+
+config OPENAI_REALTIME_WEBSOCKET_URI
+    string "OpenAI Realtime Websocket URI"
+    default "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17"
+    help
+        OpenAI Realtime Websocket URI
+
+endmenu

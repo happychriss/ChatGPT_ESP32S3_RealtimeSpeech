@@ -1,0 +1,73 @@
+# ESP-IDF
+build/
+sdkconfig
+sdkconfig.old
+*.bin
+*.elf
+*.map
+*.log
+*.csv
+*.wav
+
+# CLion
+cmake-build-*/
+.idea/
+*.iml
+*.iws
+*.ipr
+cmake-build-debug/
+cmake-build-release/
+cmake-build-relwithdebinfo/
+cmake-build-minsizerel/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+*.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Go
+bin/
+pkg/
+*.exe
+*.test
+*.out
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ruby
+*.gem
+*.rbc
+.bundle/
+.config/
+coverage/
+InstalledFiles
+pkg/
+spec/reports/
+test/tmp/
+test/version_tmp/
+tmp/
+*.log
+
+# General
+.DS_Store
+Thumbs.db
