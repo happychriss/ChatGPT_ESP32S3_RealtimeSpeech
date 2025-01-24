@@ -1,8 +1,6 @@
-set(COMPONENT_SRCS  "raw_stream.c"
-                    "vad_stream.c"
+set(COMPONENT_SRCS  "vad_stream.c"
                     "i2s_stream_idf5_ics43434.c"
-
-
+                    "openai_send_stream.c"
 )
 set(COMPONENT_ADD_INCLUDEDIRS "include")
 
@@ -14,6 +12,6 @@ list(APPEND COMPONENT_SRCS  "lib/hls/hls_parse.c"
 
 list(APPEND COMPONENT_SRCS  "lib/gzip/gzip_miniz.c")
 
-set(COMPONENT_REQUIRES audio_pipeline driver audio_sal esp_http_client tcp_transport spiffs audio_board esp-adf-libs bootloader_support esp_dispatcher esp_actions tone_partition mbedtls esp-sr)
+set(COMPONENT_REQUIRES esp_websocket_client audio_pipeline driver audio_sal esp_http_client tcp_transport spiffs audio_board esp-adf-libs bootloader_support esp_dispatcher esp_actions tone_partition mbedtls esp-sr)
 
 register_component()

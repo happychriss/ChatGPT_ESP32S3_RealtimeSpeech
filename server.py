@@ -73,7 +73,7 @@ class Handler(BaseHTTPRequestHandler):
             print("Audio information, sample rates: {}, bits: {}, channel(s): {}".format(sample_rates, bits, channel))
 
             count=0
-            while count < 20:
+            while count < 50:
                 # print count, total_bytes, chunk_size in one line
                 chunk_size = self._get_chunk_size()
                 print("Count: {}, Total bytes received: {}, Chunk size: {}".format(count, total_bytes, chunk_size))

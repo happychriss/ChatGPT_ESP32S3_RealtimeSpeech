@@ -9,6 +9,9 @@ sdkconfig.old
 *.csv
 *.wav
 
+# all files from esp-adf
+esp-adf/
+
 # CLion
 cmake-build-*/
 .idea/

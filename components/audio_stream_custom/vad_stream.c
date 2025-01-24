@@ -18,7 +18,7 @@ static const char *TAG = "VAD_STREAM";
 #define VAD_SAMPLE_RATE_HZ    16000
 #define VAD_FRAME_LENGTH_MS       30
 #define VAD_BUFFER_LENGTH (VAD_FRAME_LENGTH_MS * VAD_SAMPLE_RATE_HZ / 1000)
-#define VAD_MODE           VAD_MODE_4  // or VAD_MODE_3, etc.
+#define VAD_MODE           VAD_MODE_2  // or VAD_MODE_3, etc.
 
 
 typedef struct {
@@ -26,6 +26,7 @@ typedef struct {
     bool in_speech;
     uint8_t *frame_buffer; // Accumulate one frame here
     int filled_bytes; // Current byte offset in frame_buffer
+    bool ignore_voice;
 } vad_stream_t;
 
 /**
@@ -101,16 +102,22 @@ static int _vad_process(audio_element_handle_t self, char *in_buffer, int in_len
             return AEL_IO_OK;
         }
 
+        if (vad->ignore_voice) {
+            ESP_LOGI(TAG, "************** Ignoring voice ************");
+            return r_size;
+        }
+
         int processed = 0;
         int frame_bytes = VAD_BUFFER_LENGTH * sizeof(short);
 
         // print ring buffer size and first 10 samples
-        /*
-        ESP_LOGI(TAG, "IN: VAD process: in_len=%d,  filled_bytes=%d", in_len, vad->filled_bytes);
+        ESP_LOGI(TAG, "IN: VAD process: Speech - Status: %d in_len=%d,  filled_bytes=%d", vad->in_speech,in_len, vad->filled_bytes);
+
+/*
         for (int i = 0; i < 10; i++) {
             ESP_LOGI(TAG, "  sample[%d]=%d", i, in_buffer[i]);
-        }
-        */
+        }*/
+
 
         while (processed < in_len) {
             int to_copy = frame_bytes - vad->filled_bytes;
@@ -138,10 +145,14 @@ static int _vad_process(audio_element_handle_t self, char *in_buffer, int in_len
                 if (speech_now && !vad->in_speech) {
                     vad->in_speech = true;
                     audio_element_report_status(self, VAD_STREAM_EVENT_SPEECH_START);
-//                    ESP_LOGI(TAG, "  **************** VAD process: speech detected ****************");
+//                  ESP_LOGI(TAG, "  **************** VAD process: speech detected ****************");
                 } else if (!speech_now && vad->in_speech) {
                     vad->in_speech = false;
                     audio_element_report_status(self, VAD_STREAM_EVENT_SPEECH_STOP);
+                    vad->ignore_voice = false;
+//                    ESP_LOGI(TAG, "  **************** VAD process: speech detected ****************");
+                } else {
+                    // ESP_LOGI(TAG, "  VAD process: no change in speech status");
                 }
 
                 // Reset for next frame
@@ -151,13 +162,12 @@ static int _vad_process(audio_element_handle_t self, char *in_buffer, int in_len
         }
 
         if (vad->in_speech) {
+            ESP_LOGI(TAG, "OUT: VAD process: Speech - Status: %d in_len=%d,  filled_bytes=%d", vad->in_speech,in_len, vad->filled_bytes);
             return audio_element_output(self, in_buffer, r_size);  // Forward data
-        } else {
-            // Consume the input without forwarding to avoid buffer overflow
-            ESP_LOGD(TAG, "Silence detected, consuming input without forwarding.");
-            return r_size;  // Simulate successful processing
         }
-
+        // Consume the input without forwarding to avoid buffer overflow
+        //            ESP_LOGD(TAG, "Silence detected, consuming input without forwarding.");
+        return r_size;  // Simulate successful processing
     }
     return w_size;
 }
@@ -185,6 +195,8 @@ audio_element_handle_t vad_stream_init(audio_element_cfg_t *config) {
         config->tag = "vad_stream";
     }
 
+
+
     // 2) Create the audio element
     audio_element_handle_t el = audio_element_init(config);
     AUDIO_MEM_CHECK(TAG, el, return NULL);
@@ -195,6 +207,8 @@ audio_element_handle_t vad_stream_init(audio_element_cfg_t *config) {
                     audio_element_deinit(el);
                     return NULL;
                     });
+
+    vad->ignore_voice = false;
 
     // 4) Attach context to the element
     audio_element_setdata(el, vad);

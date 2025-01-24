@@ -32,7 +32,7 @@
 #define BSP_I2S_SCLK          (GPIO_NUM_17) // serial clock
 #define BSP_I2S_MCLK          (GPIO_NUM_2)
 #define BSP_I2S_LCLK          (GPIO_NUM_47)// left right clock
-#define BSP_I2S_DOUT          (GPIO_NUM_15) // To Codec ES8311
+#define BSP_I2S_DOUT          (GPIO_NUM_15) // To max98357a
 #define BSP_I2S_DSIN          (GPIO_NUM_16) // From ICS43434
 #define BSP_POWER_AMP_IO      (GPIO_NUM_46)
 #define BSP_I2S_GPIO_CFG       \
@@ -40,7 +40,7 @@
         .mclk = I2S_GPIO_UNUSED,   \
         .bclk = BSP_I2S_SCLK,  \
         .ws = BSP_I2S_LCLK,    \
-        .dout = I2S_GPIO_UNUSED,  \
+        .dout = BSP_I2S_DOUT,  \
         .din = BSP_I2S_DSIN,   \
         .invert_flags = {      \
             .mclk_inv = false, \

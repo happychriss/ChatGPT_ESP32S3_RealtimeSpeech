@@ -18,6 +18,9 @@ extern "C" {
 #define VAD_STREAM_EVENT_SPEECH_START  (1)
 #define VAD_STREAM_EVENT_SPEECH_STOP   (2)
 
+
+
+
     /**
      * @brief Create a VAD audio element
      *

@@ -4,6 +4,7 @@
 
 
 #include "http_stream_handler.h"
+#include "audio_config.h"
 
 #if (ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 1, 0))
 #include "esp_netif.h"
@@ -26,7 +27,7 @@ esp_err_t _http_stream_event_handle(http_stream_event_msg_t *msg)
         ESP_LOGI(TAG, "[ + ] HTTP client HTTP_STREAM_PRE_REQUEST, lenght=%d", msg->buffer_len);
         esp_http_client_set_method(http, HTTP_METHOD_POST);
         char dat[10] = {0};
-        snprintf(dat, sizeof(dat), "%d", EXAMPLE_AUDIO_SAMPLE_RATE);
+        snprintf(dat, sizeof(dat), "%d", 24000);
         esp_http_client_set_header(http, "x-audio-sample-rates", dat);
         memset(dat, 0, sizeof(dat));
         snprintf(dat, sizeof(dat), "%d", EXAMPLE_AUDIO_BITS);
